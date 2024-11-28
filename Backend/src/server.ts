@@ -24,7 +24,7 @@ interface GenerateReportRequest {
 
 async function extractMaterial(report: string): Promise<string> {
     const prompt = `
-        Extrahiere bitte die "Verwendeten Materialien" aus folgendem Text:
+        Extrahiere bitte die "Verwendeten Materialien" aus folgendem Text (in der angegebenen Sprache):
         ${report}
         
         Gib nur das Material zurück, keine weiteren Informationen. Wenn keine Materialien erwähnt werden, gib ein leeres Ergebnis zurück (keine Leerzeichen, keine Nullen, gar nichts).
@@ -56,7 +56,7 @@ async function extractMaterial(report: string): Promise<string> {
 
 async function extractProblems(report: string): Promise<string> {
     const prompt = `
-        Extrahiere bitte "Probleme/Anmerkungen" aus folgendem Text:
+        Extrahiere bitte "Probleme/Anmerkungen" aus folgendem Text (in der angegebenen Sprache):
         ${report}
         
         Gib nur die Probleme oder Anmerkungen zurück. Wenn keine Probleme oder Anmerkungen erwähnt werden, gib ein leeres Ergebnis zurück (keine Leerzeichen, keine Nullen, gar nichts).
@@ -88,7 +88,7 @@ async function extractProblems(report: string): Promise<string> {
 
 async function extractFurtherNotes(report: string): Promise<string> {
     const prompt = `
-        Extrahiere bitte "Weitere Notizen" aus folgendem Text:
+        Extrahiere bitte "Weitere Notizen" aus folgendem Text (in der angegebenen Sprache):
         ${report}
         
         Gib nur die weiteren Notizen zurück. Wenn keine weiteren Notizen erwähnt werden, gib ein leeres Ergebnis zurück (keine Leerzeichen, keine Nullen, gar nichts).
@@ -126,7 +126,7 @@ app.post('/generate-report', async (req: any, res: any) => {
     }
 
     try {
-        const prompt = `Erstelle einen Bericht basierend auf den folgenden Daten:
+        const prompt = `Erstelle einen Bericht basierend auf den folgenden Daten in der angegebenen sprache:
 
             Bericht ${title}:
             Datum der Erstellung: [Aktuelles Datum, Pflichtfeld]
