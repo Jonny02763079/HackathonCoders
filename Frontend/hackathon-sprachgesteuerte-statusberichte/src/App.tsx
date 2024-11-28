@@ -4,9 +4,10 @@ import SpeechService from './components/SpeechService'
 
 function App() {
 
+
   return (
     <div>
-      <SpeechService />
+      <SpeechService spokenLanguage='de' translateInLanguage= />
     </div>
   )
 }

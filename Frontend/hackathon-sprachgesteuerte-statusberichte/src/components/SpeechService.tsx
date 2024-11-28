@@ -1,24 +1,15 @@
-import React, { useRef, useState } from 'react'
+import { useRef, useState } from "react";
 
-type Props = {}
 
-export default function SpeechService({ }: Props) {
+type Props = {
+    spokenLanguage: string,
+    translateInLanguage: string
+}
+
+export default function SpeechService({ spokenLanguage, translateInLanguage }: Props) {
 
     const [transcript, setTranscript] = useState<string>('');
     const [isRecording, setIsRecording] = useState<boolean>(false);
-
-
-    // const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-    // recognition.lang = 'de-DE';
-
-    // recognition.onresult = (event: SpeechRecognitionEvent) => {
-    //     const result = event.results[0][0].transcript;
-    //     setTranscript(result); // Erkannten Text speichern
-    // };
-
-
-
-    //let mediaRecorder: MediaRecorder | null = null;
 
     const mediaRecorderRef = useRef<MediaRecorder | null>(null);
 
@@ -31,11 +22,26 @@ export default function SpeechService({ }: Props) {
             const mediaRecorder = new MediaRecorder(stream);
             mediaRecorderRef.current = mediaRecorder;
 
-            mediaRecorder.ondataavailable = (event) => {
+            mediaRecorder.ondataavailable = async (event) => {
                 const audioBlob = event.data;
-                console.log("inEvent")
-                console.log("Audio aufgenommen:", audioBlob);
-                // Audio könnte hier verarbeitet oder hochgeladen werden
+
+                const audioFile = new Blob([audioBlob], { type: 'audio/mp3' });
+
+                const formData = new FormData();
+                formData.append("file", audioFile, "speech.mp3");
+
+                const response = await fetch(`http://localhost:3000/transcribe/${spokenLanguage}`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+
+                const data = await response.json();
+                console.log('Transcription:', data);
+
+                setTranscript(data.text);
+
+                translate(data.text);
             };
 
             mediaRecorder.start();
@@ -44,6 +50,13 @@ export default function SpeechService({ }: Props) {
         } catch (error) {
             console.log("Microfon not started");
         }
+    }
+
+    async function translate(data: string) {
+        await fetch(`http://localhost:3000/translate?language=${language}`, {
+            method: 'POST',
+            body: data
+        });
     }
 
 
@@ -63,7 +76,7 @@ export default function SpeechService({ }: Props) {
     return (
         <div>
             <div>
-                <button onClick={isRecording ? stopRecording : startRecording}>{isRecording ? "startRecording" : "stopRecording"}</button>
+                <button onClick={isRecording ? stopRecording : startRecording}>{isRecording ? "stop Recording" : "start Recording"}</button>
             </div>
             <div>
                 {transcript}
