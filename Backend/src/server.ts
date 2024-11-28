@@ -1,20 +1,26 @@
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
-
 const express = require('express');
 const bodyParser = require('body-parser');
 const axios = require('axios');
 const dotenv = require('dotenv');
+const multer = require('multer');
+const { OpenAI } = require('openai');
+const fs = require('fs');
+const path = require('path');
+const cors = require('cors');
+require('dotenv').config();
 
 dotenv.config();
 
 const app = express();
 app.use(bodyParser.json());
+app.use(cors());
 
 const PORT = process.env.PORT || 3000;
-const OPENAI_API_KEY = process.env.OPENAI_API_KEY as string;
-const DIRECTUS_URL = process.env.DIRECTUS_URL as string;
-const DIRECTUS_TOKEN = process.env.DIRECTUS_TOKEN as string;
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY
+const DIRECTUS_URL = process.env.DIRECTUS_URL
+const DIRECTUS_TOKEN = process.env.DIRECTUS_TOKEN || "";
 
 interface GenerateReportRequest {
     inputText: string;
@@ -195,6 +201,70 @@ app.post('/generate-report', async (req: any, res: any) => {
         return res.status(500).json({ error: 'An error occurred while generating the report.' });
     }
 });
+
+
+const openai = new OpenAI({
+    apiKey: process.env.OPEN_AI_KEY,
+});
+
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
+
+app.post('/transcribe/:spokenLanguage', upload.single('file'), async (req: any, res: any) => {
+    if (!req.file) {
+        res.status(400).json({ error: 'No file provided' });
+        return;
+    }
+    const language = req.params.spokenLanguage || "";
+    console.log("language");
+
+    try {
+        const audioBuffer = req.file.buffer;
+
+        const tempFilePath = path.join(__dirname, 'temp_audio.mp3');
+        fs.writeFileSync(tempFilePath, audioBuffer);
+
+        const transcription = await openai.audio.transcriptions.create({
+            model: 'whisper-1',
+            file: fs.createReadStream(tempFilePath),
+            response_format: 'text',
+            language: language
+        });
+
+        fs.unlinkSync(tempFilePath);
+        res.json({ text: transcription });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Failed to transcribe audio' });
+    }
+});
+
+
+app.post('/translate/:translateInLanguage', async (req: any, res: any) => {
+    const language = req.params.translate.translateInLanguage;
+    const openai = new OpenAI();
+
+
+    try {
+        const completion = await openai.chat.completions.create({
+            model: "gpt-4o",
+            messages: [
+                { role: "system", content: "You are a text translator." },
+                {
+                    role: "user",
+                    content: `Translate the following text into ${language}: ${req.body}.`,
+                },
+            ],
+        });
+        res(completion);
+    } catch {
+        console.log("Text could not be send to OpenAI")
+    }
+});
+
+
 
 app.listen(PORT, () => {
     console.log(`Backend is running on http://localhost:${PORT}`);
