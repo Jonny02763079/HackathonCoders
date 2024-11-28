@@ -20,7 +20,6 @@ app.use(cors());
 const PORT = process.env.PORT || 3000;
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY
 const DIRECTUS_URL = process.env.DIRECTUS_URL
-const DIRECTUS_TOKEN = process.env.DIRECTUS_TOKEN || "";
 
 interface GenerateReportRequest {
     inputText: string;
