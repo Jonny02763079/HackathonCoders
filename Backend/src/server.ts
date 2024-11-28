@@ -243,7 +243,7 @@ app.post('/transcribe/:spokenLanguage', upload.single('file'), async (req: any, 
 
 
 app.post('/translate/:translateInLanguage', async (req: any, res: any) => {
-    const language = req.params.translate.translateInLanguage;
+    const language = req.params.translate.translateInLanguage || "de";
     const openai = new OpenAI();
 
 

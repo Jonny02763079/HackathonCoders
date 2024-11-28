@@ -7,6 +7,7 @@ type Props = {
 export default function Report({ reportNumber }: Props) {
   const translateInLanguage = "de"
   const spokenLanguage = "de"
+
   return (
     <div className="pt-[80px] w-[100vw] px-[5em]">
       <div className="flex justify-between items-center">
