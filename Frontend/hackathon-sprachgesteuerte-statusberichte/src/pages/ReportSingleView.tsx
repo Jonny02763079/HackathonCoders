@@ -36,18 +36,31 @@ export default function ReportSingleView() {
 
     const generatePDF = () => {
         const doc = new jsPDF();
+        let beginLeft = 20;
+        let beginRight = 70;
+        //JSON.stringify(data
+        console.log(data);
 
         if (data) {
             doc.setFontSize(20);
-            doc.text(`Report ID: ${id}`, 20, 30);
+            doc.text(`Title: ${id}`, beginLeft, 30);
+
             doc.setFontSize(12);
-            doc.text(`Title: ${data.title || 'N/A'}`, 20, 20);
-            doc.text(`Description: ${data.description || 'N/A'}`, 20, 30);
+            doc.text('Details:', beginLeft, 40);
 
             doc.setFontSize(10);
-            doc.text('Details:', 20, 40);
-            doc.text(JSON.stringify(data, null, 2), 20, 50);
-
+            doc.text("Erstellt am:", beginLeft, 50);
+            doc.text(JSON.stringify(data.data.date_created), beginRight, 50);
+            doc.text("Baustelle", beginLeft, 60);
+            doc.text(JSON.stringify(data.data.construction_site), beginRight, 60);
+            doc.text("Arbeit erledigt", beginLeft, 70);
+            doc.text(JSON.stringify(data.data.work_done_description), beginLeft, 80);
+            doc.text("Materialien verwendet", beginLeft, 90);
+            doc.text(JSON.stringify(data.data.work_done_description), beginLeft, 100);
+            doc.text("Aufgetauchte Problemen", beginLeft, 110);
+            doc.text(JSON.stringify(data.data.problems_emerged_description), beginLeft, 120);
+            doc.text("Weitere Anmerkungen", beginLeft, 130);
+            doc.text(JSON.stringify(data.data.work_done_description), beginLeft, 140);
             doc.save(`report_${id}.pdf`);
         }
     };
