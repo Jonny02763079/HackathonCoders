@@ -31,11 +31,13 @@ export default function AudioWaveRecorder({ spokenLanguage, translateInLanguage,
     try {
       setIsRecording(true);
       setTranscript('');
+      setTranslatedText('');
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       const mediaRecorder = new MediaRecorder(stream);
       mediaRecorderRef.current = mediaRecorder;
 
       mediaRecorder.ondataavailable = async (event) => {
+
         const audioBlob = event.data;
 
         //console.log(audioBlob);
@@ -84,19 +86,6 @@ export default function AudioWaveRecorder({ spokenLanguage, translateInLanguage,
     //console.log(translatedData);
     setTranslatedText(await translatedData);
   }
-
-  // Ronny
-  // async function sendToReport(text: string, constructionSite: string, title: string) {
-  //     const result = await fetch(`http://localhost:3000//`, {
-  //         method: 'POST',
-  //         headers: { 'Content-Type': 'application/json' },
-  //         body: {
-  //             text: text,
-  //             constructionSite: constructionSite,
-  //             title: title
-  //         }
-  //     });
-  // }
 
 
   function stopRecording() {
