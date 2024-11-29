@@ -38,6 +38,8 @@ export default function AudioWaveRecorder({ spokenLanguage, translateInLanguage,
       mediaRecorder.ondataavailable = async (event) => {
         const audioBlob = event.data;
 
+        //console.log(audioBlob);
+
         const audioFile = new Blob([audioBlob], { type: 'audio/mp3' });
 
         const formData = new FormData();

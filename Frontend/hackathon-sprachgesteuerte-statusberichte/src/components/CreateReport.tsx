@@ -46,6 +46,8 @@ export default function CreateReport({ content, closePopup }: Props) {
     const constructionSite = standOrt;
     const reportTitle = title;
 
+    //Ronny
+
     /*const result = await fetch(`http://localhost:3000/Ronny's-Url/`, {
         method: 'POST',
       headers: {'Content-Type': 'application/json' },
