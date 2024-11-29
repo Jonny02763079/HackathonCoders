@@ -85,7 +85,6 @@ async function extractFurtherNotes(report: string): Promise<string> {
     return await getOpenAiResponse(prompt);
 }
 
-
 // Generate the report and handle extraction
 app.post('/generate-report', async (req: any, res: any) => {
     const { inputText, constructionSite, title }: GenerateReportRequest = req.body;
@@ -97,7 +96,7 @@ app.post('/generate-report', async (req: any, res: any) => {
     try {
         const prompt = `Erstelle einen Bericht basierend auf den folgenden Daten:
             Berichtstitel: ${title}
-            Erstellungsdatum: [füge hier das aktuelle Datum in TT-MM-JJ ein]
+            Erstellungsdatum: [füge hier das aktuelle Datum in JJJJ-MM-TT ein (ohne die Uhrzeit!!!!)]
             Baustelle: ${constructionSite}
             Arbeitsbeschreibung: ${inputText}
 
@@ -149,7 +148,6 @@ app.post('/generate-report', async (req: any, res: any) => {
     }
 });
 
-// Endpoint to transcribe audio files using OpenAI Whisper
 const openai = new OpenAI({
     apiKey: process.env.OPEN_AI_KEY,
 });
@@ -187,7 +185,6 @@ app.post('/transcribe/:spokenLanguage', upload.single('file'), async (req: any, 
     }
 });
 
-// Endpoint for text translation
 app.post('/translate/:translateInLanguage', async (req: any, res: any) => {
     let language = req.params.translateInLanguage || "de";
     language = language === "de" ? "german" : language === "en" ? "english" : "german";

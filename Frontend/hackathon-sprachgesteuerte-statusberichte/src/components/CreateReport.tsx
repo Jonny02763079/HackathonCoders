@@ -4,7 +4,7 @@ import Button from "./Button";
 import Select from "./Select";
 import { useEffect, useState } from "react";
 
-export default function CreateReport({ closePopup }: Props) {
+export default function CreateReport({ closePopup }: any) {
   const spokenLanguage = "de";
   const translateInLanguage = "de";
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -112,9 +112,8 @@ export default function CreateReport({ closePopup }: Props) {
           <input
             value={title}
             onChange={handleTitleChange}
-            className={`w-[230px] flex justify-between gap-10 items-center border-[1px] ${
-              titleError ? "border-red-500" : "border-[#A6A6A6]"
-            } rounded-md px-4 py-[8px] focus:outline-none`}
+            className={`w-[230px] flex justify-between gap-10 items-center border-[1px] ${titleError ? "border-red-500" : "border-[#A6A6A6]"
+              } rounded-md px-4 py-[8px] focus:outline-none`}
             required
           />
           {titleError && (
@@ -127,9 +126,8 @@ export default function CreateReport({ closePopup }: Props) {
           <input
             value={standOrt}
             onChange={handleLocationChange}
-            className={`w-[230px] flex justify-between gap-10 items-center border-[1px] ${
-              standOrtError ? "border-red-500" : "border-[#A6A6A6]"
-            } rounded-md px-4 py-[8px] focus:outline-none`}
+            className={`w-[230px] flex justify-between gap-10 items-center border-[1px] ${standOrtError ? "border-red-500" : "border-[#A6A6A6]"
+              } rounded-md px-4 py-[8px] focus:outline-none`}
             required
           />
           {standOrtError && (
@@ -165,9 +163,8 @@ export default function CreateReport({ closePopup }: Props) {
                   EN
                 </li>
                 <li
-                  className={`p-2 hover:bg-[#CDE7F8] flex justify-center ${
-                    "DE" === selectedLanguage ? "font-bold bg-[#CDE7F8]" : ""
-                  }`}
+                  className={`p-2 hover:bg-[#CDE7F8] flex justify-center ${"DE" === selectedLanguage ? "font-bold bg-[#CDE7F8]" : ""
+                    }`}
                   onClick={() => selectLanguage("DE")}
                 >
                   DE
