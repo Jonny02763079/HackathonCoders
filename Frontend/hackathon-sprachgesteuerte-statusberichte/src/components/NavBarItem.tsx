@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 type Props = {
   content: string;
-  activeLink: "bericht" | "baustelle" | null;
+  activeLink: "berichte" | "baustellen" | null;
   path: string;
   onClick: () => void;
 };
@@ -23,7 +23,7 @@ export default function NavBarItem({
         }`}
       ></div>
       <div>
-        <Link className="font-semibold text-sm" to={path} onClick={onClick}>
+        <Link className="font-semibold text-md" to={path} onClick={onClick}>
           {content}
         </Link>
       </div>

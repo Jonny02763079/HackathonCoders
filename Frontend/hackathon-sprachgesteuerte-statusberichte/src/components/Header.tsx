@@ -5,9 +5,9 @@ import England from '../assets/pictures/EnglandFlagge.jpeg';
 import LogoRhomberg from '../assets/pictures/Logo_Rhomberg_SERSA-removebg-preview.png';
 
 export default function Header() {
-  const [activeLink, setActiveLink] = useState<"bericht" | "baustelle" | null>(
-    "bericht"
-  );
+  const [activeLink, setActiveLink] = useState<
+    "berichte" | "baustellen" | null
+  >("berichte");
   const [isDropDownOpen, setIsDropdownOpen] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState("DE");
 
@@ -87,16 +87,16 @@ export default function Header() {
 
       <div className="flex gap-20 justify-center">
         <NavBarItem
-          content="Bericht"
+          content="Berichte"
           path="/report"
           activeLink={activeLink}
-          onClick={() => setActiveLink("bericht")}
+          onClick={() => setActiveLink("berichte")}
         />
         <NavBarItem
-          content="Baustelle"
+          content="Baustellen"
           path="/construction"
           activeLink={activeLink}
-          onClick={() => setActiveLink("baustelle")}
+          onClick={() => setActiveLink("baustellen")}
         />
       </div>
       <div className="flex justify-end">

@@ -46,8 +46,7 @@ export default function CreateReport({ closePopup }: Props) {
     console.log("Standort:", location);
 
     sendToReport();
-
-    alert("Bericht gespeichert!");
+    closePopup();
   };
 
   async function sendToReport() {

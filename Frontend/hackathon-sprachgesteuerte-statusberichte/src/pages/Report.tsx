@@ -41,7 +41,7 @@ export default function Report({ reportNumber }: Props) {
     };
 
     fetchReports();
-  }, []);
+  }, [data]);
 
   console.log(data);
 
