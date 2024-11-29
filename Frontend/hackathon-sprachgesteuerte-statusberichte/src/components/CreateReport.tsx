@@ -48,7 +48,7 @@ export default function CreateReport({ content, closePopup }: Props) {
     const constructionSite = standOrt;
     const reportTitle = title;
 
-    const result = await fetch(`http://localhost:3000/api/report/openAi/extractMaterials`, {
+    const result = await fetch(`http://localhost:3000/ronny`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
