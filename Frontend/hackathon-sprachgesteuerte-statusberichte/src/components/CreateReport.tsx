@@ -52,24 +52,39 @@ export default function CreateReport({ content, closePopup }: Props) {
     alert("Bericht gespeichert!");
   };
 
-
-  //Beispiel für eine Implementierung - es fehlen noch 2 weitere
-  async function sendToReport() {
-    const text = translatedText;
-    const constructionSite = standOrt;
-    const reportTitle = title;
-
-    const result = await fetch(`http://localhost:3000/ronny`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        text: text,
-        constructionSite: constructionSite,
-        title: reportTitle
-      })
-    });
-    console.log(result);
+  const reportData = {
+    inputText: speechContent,
+    constructionSite: standOrt,
+    title: title
   }
+
+  async function sendToReport() {
+    console.log("inside");
+
+    try {
+      const response = await fetch(`http://localhost:3000/generate-report`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          constructionSite: standOrt,
+          inputText: speechContent,
+          title: title
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Server responded with error: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      console.log("Report successfully created:", data);
+    } catch (error) {
+      console.error("Error during fetch request:", error);
+    }
+  }
+
 
 
   return (
