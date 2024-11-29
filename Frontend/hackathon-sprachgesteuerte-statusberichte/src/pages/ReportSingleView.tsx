@@ -19,6 +19,7 @@ const getReportById = async (id: string) => {
 const styles = StyleSheet.create({
     page: {
         flexDirection: 'column',
+        height: "90vh",
         padding: 40,
         backgroundColor: '#E4E4E4',
         gap: 10
@@ -95,7 +96,7 @@ const ReportSingleView = () => {
                         <Text style={styles.title}>Titel: {data.data.title}</Text>
                     </View>
                     <View style={{ marginBottom: 5 }}>
-                        <Text style={styles.subTitle}>Erstellt am: {formatDate(data.data.date_created)}</Text>
+                        <Text style={styles.subTitle}> Erstellt am: {formatDate(data.data.date_created)}</Text>
                     </View>
                     <View style={{ marginBottom: 5 }}>
                         <Text style={styles.subTitle}>Bericht Id: {data.data.id}</Text>
@@ -108,7 +109,7 @@ const ReportSingleView = () => {
                         <Text style={styles.longDescriptions}>{data.data.work_done_description || "keine Angabe"}</Text>
                     </View>
                     <View style={{ marginBottom: 5 }}>
-                        <Text style={styles.subTitle}>Materialien verwende:t</Text>
+                        <Text style={styles.subTitle}>Materialien verwendet:</Text>
                         <Text style={styles.longDescriptions}>{data.data.material_used_description || "keine Angabe"}</Text>
                     </View>
                     <View style={{ marginBottom: 5 }}>
@@ -129,12 +130,17 @@ const ReportSingleView = () => {
     if (!data) return <div>No data available</div>;
 
     return (
-        <div>
-            <pre>{JSON.stringify(data, null, 2)}</pre>
-            <PDFViewer ><MyDocument data={data}></MyDocument></PDFViewer>
-            <PDFDownloadLink document={<MyDocument data={data} />} fileName="report.pdf">
-                {({ loading }) => (loading ? 'Loading document...' : 'Download Report')}
-            </PDFDownloadLink>
+        <div className='flex items-center flex-col h-36'>
+            <div style={{ height: 700, marginBottom: 30 }}>
+                <PDFViewer >
+                    <MyDocument data={data}></MyDocument>
+                </PDFViewer>
+            </div>
+            <div style={{ backgroundColor: "#3777AD", padding: 20, color: "white", width: "fit-content", borderRadius: 15, cursor: "pointer" }}>
+                <PDFDownloadLink document={<MyDocument data={data} />} fileName={`report_${data.data.id}.pdf`}>
+                    {({ loading }) => (loading ? 'Loading document...' : 'Download Report')}
+                </PDFDownloadLink>
+            </div>
         </div>
     );
 };
