@@ -1,6 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Report from "./pages/Report";
-import Construction from "./pages/Construction";
+import Construction from "./pages/ConstructionSite";
 import Header from "./components/Header";
 
 export default function App() {

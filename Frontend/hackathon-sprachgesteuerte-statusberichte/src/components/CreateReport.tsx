@@ -9,7 +9,7 @@ type Props = {
   content?: string;
 };
 
-export default function CreateReport({ closePopup }: Props) {
+export default function CreateReport({ content, closePopup }: Props) {
 
   const spokenLanguage = "de";
   const translateInLanguage = "de";
@@ -18,7 +18,7 @@ export default function CreateReport({ closePopup }: Props) {
   const [standOrt, setStandOrt] = useState<string>("");
   const [speechContent, setSpeechContent] = useState<string>("");
 
-  const [translatedText, setTranslatedText] = useState<string>('');
+  const [translatedText, setTranslatedText] = useState<string>("");
 
   useEffect(() => {
     setSpeechContent(translatedText);
@@ -35,7 +35,9 @@ export default function CreateReport({ closePopup }: Props) {
   const saveReport = () => {
     console.log("Berichtstitel:", title);
     console.log("Standort:", location);
+
     sendToReport();
+
     alert("Bericht gespeichert!");
   };
 
@@ -89,8 +91,12 @@ export default function CreateReport({ closePopup }: Props) {
       </div>
 
       <div className="bg-white flex justify-between items-center">
-
-        <AudioWaveRecorder spokenLanguage={spokenLanguage} translateInLanguage={translateInLanguage} translatedText={translatedText} setTranslatedText={setTranslatedText} />
+        <AudioWaveRecorder
+          spokenLanguage={spokenLanguage}
+          translateInLanguage={translateInLanguage}
+          translatedText={translatedText}
+          setTranslatedText={setTranslatedText}
+        />
 
         <button className="hover:bg-[#265f7d] bg-[#3777AD] w-[70px] h-[35px] rounded-[10px] flex justify-center items-center text-white font-bold text-sm">
           DE
