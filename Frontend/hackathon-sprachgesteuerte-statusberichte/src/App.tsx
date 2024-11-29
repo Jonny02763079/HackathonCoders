@@ -2,6 +2,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Report from "./pages/Report";
 import Construction from "./pages/ConstructionSite";
 import Header from "./components/Header";
+import ReportSingleView from "./pages/ReportSingleView";
 
 export default function App() {
   return (
@@ -9,7 +10,9 @@ export default function App() {
       <BrowserRouter>
         <Header />
         <Routes>
+          <Route path="/" element={<Report reportNumber={1} />} />
           <Route path="report" element={<Report reportNumber={1} />} />
+          <Route path="report/:id" element={<ReportSingleView />} />
           <Route path="construction" element={<Construction />} />
         </Routes>
       </BrowserRouter>

@@ -13,6 +13,8 @@ export default function CreateReport({ content, closePopup }: Props) {
 
   const spokenLanguage = "de";
   const translateInLanguage = "de";
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [selectedLanguage, setSelectedLanguage] = useState("DE");
 
   const [title, setTitle] = useState<string>("");
   const [standOrt, setStandOrt] = useState<string>("");
@@ -30,6 +32,15 @@ export default function CreateReport({ content, closePopup }: Props) {
 
   const handleLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setStandOrt(e.target.value);
+  };
+
+  const toggleDropdown = () => {
+    setIsDropdownOpen((prev) => !prev);
+  };
+
+  const selectLanguage = (language: string) => {
+    setSelectedLanguage(language);
+    setIsDropdownOpen(false);
   };
 
   const saveReport = () => {
@@ -90,6 +101,7 @@ export default function CreateReport({ content, closePopup }: Props) {
             value={title}
             onChange={handleTitleChange}
             className="w-[230px] flex justify-between gap-10 items-center border-[1px] border-[#A6A6A6] rounded-md px-4 py-[8px] focus:outline-none"
+            required
           ></input>
         </div>
 
@@ -99,6 +111,7 @@ export default function CreateReport({ content, closePopup }: Props) {
             value={standOrt}
             onChange={handleLocationChange}
             className="w-[230px] flex justify-between gap-10 items-center border-[1px] border-[#A6A6A6] rounded-md px-4 py-[8px] focus:outline-none"
+            required
           ></input>
         </div>
 
@@ -113,9 +126,34 @@ export default function CreateReport({ content, closePopup }: Props) {
           setTranslatedText={setTranslatedText}
         />
 
-        <button className="hover:bg-[#265f7d] bg-[#3777AD] w-[70px] h-[35px] rounded-[10px] flex justify-center items-center text-white font-bold text-sm">
-          DE
-        </button>
+        <div>
+          <button
+            onClick={toggleDropdown}
+            className="hover:bg-[#265f7d] bg-[#3777AD] w-[70px] h-[35px] rounded-[10px] flex justify-center items-center text-white font-bold text-sm"
+          >
+            {selectedLanguage}
+          </button>
+          {isDropdownOpen && (
+            <div className="absolute w-[70px] mt-2 border-[1px] border-[#A6A6A6] rounded-md bg-white shadow-lg">
+              <ul className="cursor-pointer mx-auto">
+                <li
+                  className="p-2 hover:bg-[#CDE7F8] flex justify-center"
+                  onClick={() => selectLanguage("EN")}
+                >
+                  EN
+                </li>
+                <li
+                  className={`p-2 hover:bg-[#CDE7F8] flex justify-center ${
+                    "DE" === selectedLanguage ? "font-bold bg-[#CDE7F8]" : ""
+                  }`}
+                  onClick={() => selectLanguage("DE")}
+                >
+                  DE
+                </li>
+              </ul>
+            </div>
+          )}
+        </div>
       </div>
 
       <div className="w-full my-10 h-auto min-h-[100px] max-h-[250px] p-5 border-[2px] border-gray-200 bg-white rounded-md overflow-y-auto scroll-to-bottom">
