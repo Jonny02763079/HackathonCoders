@@ -138,7 +138,7 @@ const ReportSingleView = () => {
             </div>
             <div style={{ backgroundColor: "#3777AD", padding: 20, color: "white", width: "fit-content", borderRadius: 15, cursor: "pointer" }}>
                 <PDFDownloadLink document={<MyDocument data={data} />} fileName={`report_${data.data.id}.pdf`}>
-                    {({ loading }) => (loading ? 'Loading document...' : 'Download Report')}
+                    {({ loading }) => (loading ? 'Dokument lädt...' : 'Bericht herunterladen')}
                 </PDFDownloadLink>
             </div>
         </div>
