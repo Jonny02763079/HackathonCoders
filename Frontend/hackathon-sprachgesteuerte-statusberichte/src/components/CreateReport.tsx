@@ -35,11 +35,10 @@ export default function CreateReport({ closePopup }: Props) {
   const saveReport = () => {
     console.log("Berichtstitel:", title);
     console.log("Standort:", location);
-
     sendToReport();
-
     alert("Bericht gespeichert!");
   };
+
 
   //Beispiel für eine Implementierung - es fehlen noch 2 weitere
   async function sendToReport() {
