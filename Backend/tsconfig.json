@@ -1,15 +1,17 @@
 {
     "compilerOptions": {
-        "target": "ES6",
-        "module": "commonjs",
-        "outDir": "./dist",
-        "rootDir": "./src",
-        "strict": true
+        "target": "es6", // Ziel-JavaScript-Version
+        "module": "commonjs", // Modulformat
+        "outDir": "./dist", // Ausgabe-Ordner
+        "rootDir": "./src", // Quell-Ordner
+        "strict": true, // Strenge Typprüfung
+        "esModuleInterop": true, // Interoperabilität mit ES-Modulen
+        "skipLibCheck": true // Bibliothekenprüfung überspringen
     },
     "include": [
-        "src/**/*.ts"
-    ],
+        "src/**/*"
+    ], // Welche Dateien kompiliert werden sollen
     "exclude": [
         "node_modules"
-    ]
+    ] // Welche Dateien ausgeschlossen werden sollen
 }

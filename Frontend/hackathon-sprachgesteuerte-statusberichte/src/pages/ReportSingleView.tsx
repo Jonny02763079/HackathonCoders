@@ -71,7 +71,7 @@ const formatDate = (isoString: string) => {
 
 const ReportSingleView = () => {
     const { id } = useParams<{ id: string }>();
-    const [data, setData] = useState<ReportData | null>(null);
+    const [data, setData] = useState<ReportData | null>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
 
@@ -96,7 +96,7 @@ const ReportSingleView = () => {
                         <Text style={styles.title}>Titel: {data.data.title}</Text>
                     </View>
                     <View style={{ marginBottom: 5 }}>
-                        <Text style={styles.subTitle}> Erstellt am: {formatDate(data.data.date_created)}</Text>
+                        <Text style={styles.subTitle}>Erstellt am: {formatDate(data.data.date_created)}</Text>
                     </View>
                     <View style={{ marginBottom: 5 }}>
                         <Text style={styles.subTitle}>Bericht Id: {data.data.id}</Text>

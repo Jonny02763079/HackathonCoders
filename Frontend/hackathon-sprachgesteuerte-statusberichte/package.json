@@ -16,7 +16,8 @@
     "jspdf": "^2.5.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-router-dom": "^7.0.1"
+    "react-router-dom": "^7.0.1",
+    "wavesurfer.js": "^7.8.9"
   },
   "devDependencies": {
     "@eslint/js": "^9.15.0",
