@@ -216,7 +216,7 @@ app.post('/transcribe/:spokenLanguage', upload.single('file'), async (req: any, 
         return;
     }
     const language = req.params.spokenLanguage || "";
-    console.log("language");
+    console.log(language);
 
     try {
         const audioBuffer = req.file.buffer;
@@ -232,6 +232,7 @@ app.post('/transcribe/:spokenLanguage', upload.single('file'), async (req: any, 
         });
 
         fs.unlinkSync(tempFilePath);
+
         res.json({ text: transcription });
 
     } catch (error) {
@@ -242,26 +243,47 @@ app.post('/transcribe/:spokenLanguage', upload.single('file'), async (req: any, 
 
 
 app.post('/translate/:translateInLanguage', async (req: any, res: any) => {
-    const language = req.params.translate.translateInLanguage || "de";
-    const openai = new OpenAI();
+    let language = req.params.translateInLanguage || "de";
+    console.log(language);
 
+    switch (language) {
+        case "de": language = "german"; break;
+        case "en": language = "english"; break;
+        default: language = "german";
+    }
+
+    const prompt = `Translate the following text into ${language}: ${req.body.text}`;
 
     try {
-        const completion = await openai.chat.completions.create({
-            model: "gpt-4o",
-            messages: [
-                { role: "system", content: "You are a text translator." },
-                {
-                    role: "user",
-                    content: `Translate the following text into ${language}: ${req.body}.`,
+        const completion = await axios.post(
+            'https://api.openai.com/v1/chat/completions',
+            {
+                model: 'gpt-3.5-turbo',
+                messages: [{ role: 'user', content: prompt }],
+                max_tokens: 1000,
+                temperature: 0.0,
+            },
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${OPENAI_API_KEY}`,
                 },
-            ],
-        });
-        res(completion);
-    } catch {
-        console.log("Text could not be send to OpenAI")
+            }
+        );
+
+        // Extrahiere nur die Textantwort
+        const translatedText = completion.data.choices[0]?.message?.content || 'No translation available';
+        console.log("Translated Text:", translatedText);
+
+        res.json({ text: translatedText });
+
+    } catch (error) {
+        console.error("Error in translation:", error);
+        res.status(500).json({ error: 'Translation failed' });
     }
 });
+
+
 
 
 

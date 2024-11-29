@@ -28,17 +28,23 @@ export default function SpeechService({ spokenLanguage, translateInLanguage }: P
                 const formData = new FormData();
                 formData.append("file", audioFile, "speech.mp3");
 
-                const response = await fetch(`http://localhost:3000/transcribe/?spokenLanguage=${spokenLanguage}`, {
+                const response = await fetch(`http://localhost:3000/transcribe/${spokenLanguage}`, {
                     method: 'POST',
                     body: formData
                 });
+
 
                 const data = await response.json();
                 console.log('Transcription:', data);
 
                 setTranscript(data.text);
 
-                //translate(data.text);
+                if (spokenLanguage === translateInLanguage) {
+                    console.log("no translation");
+                } else {
+                    await translate(data);
+                }
+
             };
 
             mediaRecorder.start();
@@ -49,11 +55,13 @@ export default function SpeechService({ spokenLanguage, translateInLanguage }: P
         }
     }
 
-    async function translate(data: string) {
-        await fetch(`http://localhost:3000/translate?translateInLanguage=${translateInLanguage}`, {
+    async function translate(data: any) {
+        const result = await fetch(`http://localhost:3000/translate/${translateInLanguage}`, {
             method: 'POST',
-            body: data
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
         });
+        console.log(result);
     }
 
 
