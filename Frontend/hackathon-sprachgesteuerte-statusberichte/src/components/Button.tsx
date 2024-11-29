@@ -1,13 +1,16 @@
 type Props = {
-  content: string;
+  onClick?: () => void; // Optionaler Klick-Handler
+  content: string; // Button-Text
 };
 
-export default function Button({ content }: Props) {
+export default function Button({ onClick, content }: Props) {
   return (
-    <div className="inline-block bg-[#3777AD] rounded-[15px] hover:cursor-pointer hover:bg-[#1f4d7a] ">
-      <div className="text-md text-white px-[22px] font-semibold py-[10px]">
-        {content}
-      </div>
-    </div>
+    <button
+      onClick={onClick} // onClick an das button-Tag weitergeben
+      className="inline-block bg-[#3777AD] rounded-[15px] hover:bg-[#1f4d7a] text-md text-white font-semibold py-[10px] px-[22px] cursor-pointer"
+      aria-label={content} // aria-label für barrierefreie Anwendungen
+    >
+      {content}
+    </button>
   );
 }
