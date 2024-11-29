@@ -6,10 +6,9 @@ import { useEffect, useState } from "react";
 
 type Props = {
   closePopup: () => void;
-  content?: string;
 };
 
-export default function CreateReport({ content, closePopup }: Props) {
+export default function CreateReport({ closePopup }: Props) {
 
   const spokenLanguage = "de";
   const translateInLanguage = "de";
@@ -51,12 +50,6 @@ export default function CreateReport({ content, closePopup }: Props) {
 
     alert("Bericht gespeichert!");
   };
-
-  const reportData = {
-    inputText: speechContent,
-    constructionSite: standOrt,
-    title: title
-  }
 
   async function sendToReport() {
     console.log("inside");
@@ -143,9 +136,8 @@ export default function CreateReport({ content, closePopup }: Props) {
                   EN
                 </li>
                 <li
-                  className={`p-2 hover:bg-[#CDE7F8] flex justify-center ${
-                    "DE" === selectedLanguage ? "font-bold bg-[#CDE7F8]" : ""
-                  }`}
+                  className={`p-2 hover:bg-[#CDE7F8] flex justify-center ${"DE" === selectedLanguage ? "font-bold bg-[#CDE7F8]" : ""
+                    }`}
                   onClick={() => selectLanguage("DE")}
                 >
                   DE
