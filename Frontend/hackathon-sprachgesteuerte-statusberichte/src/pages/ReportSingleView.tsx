@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import { PDFDownloadLink, Page, Text, View, Document, StyleSheet, PDFViewer } from '@react-pdf/renderer';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { jsPDF } from 'jspdf';
 
 const getReportById = async (id: string) => {
     try {
@@ -9,17 +9,70 @@ const getReportById = async (id: string) => {
             console.error(`Error: ${res.status} ${res.statusText}`);
             return null;
         }
-        return res.json();
+        return await res.json();
     } catch (error) {
         console.error('Could not load data', error);
         return null;
     }
 };
 
-export default function ReportSingleView() {
-    const { id } = useParams();
-    const [data, setData] = useState<any>(null);
+const styles = StyleSheet.create({
+    page: {
+        flexDirection: 'column',
+        padding: 40,
+        backgroundColor: '#E4E4E4',
+        gap: 10
+    },
+    section: {
+        marginBottom: 30,
+        padding: 10,
+        border: '1px solid #000',
+        borderRadius: 4
+    },
+    subTitle: {
+        fontSize: 16,
+        fontWeight: "bold",
+        paddingBottom: 3
+    },
+    title: {
+        marginBottom: 10,
+        fontSize: 32,
+        fontWeight: "bold"
+    },
+    flexed: {
+        display: "flex"
+    },
+    longDescriptions: {
+        fontSize: 14
+    }
+});
+
+type ReportData = {
+    title: string;
+    date_created: string;
+    construction_site: string;
+    work_done_description?: string;
+    material_used_description?: string;
+    problems_emerged_description?: string;
+    further_notes_description?: string;
+};
+
+const formatDate = (isoString: string) => {
+    const date = new Date(isoString);
+    const yyyy = date.getFullYear();
+    const mm = String(date.getMonth() + 1).padStart(2, '0');
+    const dd = String(date.getDate()).padStart(2, '0');
+    const hh = String(date.getHours()).padStart(2, '0');
+    const min = String(date.getMinutes()).padStart(2, '0');
+    const ss = String(date.getSeconds()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}-${hh}-${min}-${ss}`;
+};
+
+const ReportSingleView = () => {
+    const { id } = useParams<{ id: string }>();
+    const [data, setData] = useState<ReportData | null>(null);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(false);
 
     useEffect(() => {
         if (!id) return;
@@ -27,57 +80,63 @@ export default function ReportSingleView() {
         const fetchData = async () => {
             setLoading(true);
             const result = await getReportById(id);
+            if (!result) setError(true);
             setData(result);
             setLoading(false);
         };
-
         fetchData();
     }, [id]);
 
-    const generatePDF = () => {
-        const doc = new jsPDF();
-        let beginLeft = 20;
-        let beginRight = 70;
-        //JSON.stringify(data
-        console.log(data);
+    const MyDocument = ({ data }: { data: ReportData }) => (
+        <Document>
+            <Page size="A4" style={styles.page}>
+                <View >
+                    <View style={{ marginBottom: 10 }}>
+                        <Text style={styles.title}>Titel: {data.data.title}</Text>
+                    </View>
+                    <View style={{ marginBottom: 5 }}>
+                        <Text style={styles.subTitle}>Erstellt am: {formatDate(data.data.date_created)}</Text>
+                    </View>
+                    <View style={{ marginBottom: 5 }}>
+                        <Text style={styles.subTitle}>Bericht Id: {data.data.id}</Text>
+                    </View>
+                    <View style={{ marginBottom: 5 }}>
+                        <Text style={styles.subTitle}>Baustelle: {data.data.construction_site}</Text>
+                    </View>
+                    <View style={{ marginBottom: 5 }}>
+                        <Text style={styles.subTitle}>Erledigte Arbeit:</Text>
+                        <Text style={styles.longDescriptions}>{data.data.work_done_description || "keine Angabe"}</Text>
+                    </View>
+                    <View style={{ marginBottom: 5 }}>
+                        <Text style={styles.subTitle}>Materialien verwende:t</Text>
+                        <Text style={styles.longDescriptions}>{data.data.material_used_description || "keine Angabe"}</Text>
+                    </View>
+                    <View style={{ marginBottom: 5 }}>
+                        <Text style={styles.subTitle}>Aufgetauchte Probleme:</Text>
+                        <Text style={styles.longDescriptions}>{data.data.problems_emerged_description || "keine Angabe"}</Text>
+                    </View>
+                    <View style={{ marginBottom: 5 }}>
+                        <Text style={styles.subTitle}>Sonstige Anmerkungen:</Text>
+                        <Text style={styles.longDescriptions}>{data.data.further_notes_description || "keine Angabe"}</Text>
+                    </View>
+                </View>
+            </Page>
+        </Document >
+    );
 
-        if (data) {
-            doc.setFontSize(20);
-            doc.text(`Title: ${id}`, beginLeft, 30);
-
-            doc.setFontSize(12);
-            doc.text('Details:', beginLeft, 40);
-
-            doc.setFontSize(10);
-            doc.text("Erstellt am:", beginLeft, 50);
-            doc.text(JSON.stringify(data.data.date_created), beginRight, 50);
-            doc.text("Baustelle", beginLeft, 60);
-            doc.text(JSON.stringify(data.data.construction_site), beginRight, 60);
-            doc.text("Arbeit erledigt", beginLeft, 70);
-            doc.text(JSON.stringify(data.data.work_done_description), beginLeft, 80);
-            doc.text("Materialien verwendet", beginLeft, 90);
-            doc.text(JSON.stringify(data.data.work_done_description), beginLeft, 100);
-            doc.text("Aufgetauchte Problemen", beginLeft, 110);
-            doc.text(JSON.stringify(data.data.problems_emerged_description), beginLeft, 120);
-            doc.text("Weitere Anmerkungen", beginLeft, 130);
-            doc.text(JSON.stringify(data.data.work_done_description), beginLeft, 140);
-            doc.save(`report_${id}.pdf`);
-        }
-    };
-
-    if (loading) {
-        return <div>Loading...</div>;
-    }
-
-    if (!data) {
-        return <div>Error loading report.</div>;
-    }
+    if (loading) return <div>Loading...</div>;
+    if (error) return <div>Error: Could not load the report.</div>;
+    if (!data) return <div>No data available</div>;
 
     return (
         <div>
-            <h1>Report Details</h1>
             <pre>{JSON.stringify(data, null, 2)}</pre>
-            <button onClick={generatePDF}>Export as PDF</button>
+            <PDFViewer ><MyDocument data={data}></MyDocument></PDFViewer>
+            <PDFDownloadLink document={<MyDocument data={data} />} fileName="report.pdf">
+                {({ loading }) => (loading ? 'Loading document...' : 'Download Report')}
+            </PDFDownloadLink>
         </div>
     );
-}
+};
+
+export default ReportSingleView;
