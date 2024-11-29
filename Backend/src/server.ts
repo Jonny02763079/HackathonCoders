@@ -24,7 +24,7 @@ interface GenerateReportRequest {
 
 async function extractMaterial(report: string): Promise<string> {
     const prompt = `
-        Extrahiere bitte die "Verwendeten Materialien" aus folgendem Text (in der angegebenen Sprache):
+        Extrahiere bitte die "Verwendeten Materialien" aus folgendem Text:
         ${report}
         
         Gib nur das Material zurück, keine weiteren Informationen. Wenn keine Materialien erwähnt werden, gib ein leeres Ergebnis zurück (keine Leerzeichen, keine Nullen, gar nichts).
@@ -56,7 +56,7 @@ async function extractMaterial(report: string): Promise<string> {
 
 async function extractProblems(report: string): Promise<string> {
     const prompt = `
-        Extrahiere bitte "Probleme/Anmerkungen" aus folgendem Text (in der angegebenen Sprache):
+        Extrahiere bitte "Probleme/Anmerkungen" aus folgendem Text:
         ${report}
         
         Gib nur die Probleme oder Anmerkungen zurück. Wenn keine Probleme oder Anmerkungen erwähnt werden, gib ein leeres Ergebnis zurück (keine Leerzeichen, keine Nullen, gar nichts).
@@ -88,7 +88,7 @@ async function extractProblems(report: string): Promise<string> {
 
 async function extractFurtherNotes(report: string): Promise<string> {
     const prompt = `
-        Extrahiere bitte "Weitere Notizen" aus folgendem Text (in der angegebenen Sprache):
+        Extrahiere bitte "Weitere Notizen" aus folgendem Text:
         ${report}
         
         Gib nur die weiteren Notizen zurück. Wenn keine weiteren Notizen erwähnt werden, gib ein leeres Ergebnis zurück (keine Leerzeichen, keine Nullen, gar nichts).
@@ -126,12 +126,12 @@ app.post('/generate-report', async (req: any, res: any) => {
     }
 
     try {
-        const prompt = `Erstelle einen Bericht basierend auf den folgenden Daten in der angegebenen sprache:
+        const prompt = `Erstelle einen Bericht basierend auf den folgenden Daten:
 
             Bericht ${title}:
             Datum der Erstellung: [Aktuelles Datum, Pflichtfeld]
             Baustelle: ${constructionSite} (Pflichtfeld)
-            Arbeit beschreiben: [Optional]
+            Arbeit beschreiben: [Optional] // wenn keine vorhanden leer zurück geben nichts erfinden!!
 
             Stelle sicher, dass die Pflichtfelder befüllt sind. Wenn Informationen zu Materialien, Problemen oder Notizen erwähnt werden, fülle diese Felder aus, andernfalls lasse sie leer - komplett leer, es darf einfach nichts drinnen stehen.
             Die Baustellen ID wird oben automatisch erstellt, einfach leer lassen. Das ganze soll als schöner Text und nicht strikt nach der vorgegebenen Struktur aufgebaut werden (Fließtext). Außerdem sollen Leerzeichen und Zeilenumbrüche mit '\\n' markiert bzw. mit '\\n' aufgeteilt werden, sodass es als Text später noch lesbar ist und nicht zusammengepresst wird.
