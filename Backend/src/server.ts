@@ -27,6 +27,26 @@ interface GenerateReportRequest {
     title: string;
 }
 
+
+app.post('/api/report/openAi/extractMaterials', async (req: any, res: any) => {
+    console.log("inGPT");
+
+    const { text } = req.body;
+
+    if (!text) {
+        return res.send('');
+    }
+
+    try {
+        const material = await extractMaterial(text);
+        return res.send(material);
+    } catch (error) {
+        console.error('Error extracting material:', error);
+        return res.send('');
+    }
+});
+
+
 async function extractMaterial(report: string): Promise<string> {
     const prompt = `
         Extrahiere bitte die "Verwendeten Materialien" aus folgendem Text (in der angegebenen Sprache):
@@ -216,7 +236,7 @@ app.post('/transcribe/:spokenLanguage', upload.single('file'), async (req: any, 
         return;
     }
     const language = req.params.spokenLanguage || "";
-    console.log(language);
+    //console.log(language);
 
     try {
         const audioBuffer = req.file.buffer;
@@ -244,7 +264,7 @@ app.post('/transcribe/:spokenLanguage', upload.single('file'), async (req: any, 
 
 app.post('/translate/:translateInLanguage', async (req: any, res: any) => {
     let language = req.params.translateInLanguage || "de";
-    console.log(language);
+    //console.log(language);
 
     switch (language) {
         case "de": language = "german"; break;
@@ -282,8 +302,6 @@ app.post('/translate/:translateInLanguage', async (req: any, res: any) => {
         res.status(500).json({ error: 'Translation failed' });
     }
 });
-
-
 
 
 
