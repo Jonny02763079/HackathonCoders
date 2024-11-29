@@ -2,7 +2,7 @@ import AudioWaveRecorder from "./AudioWaveRecorder";
 import CloseTab from "./CloseTab";
 import Button from "./Button";
 import Select from "./Select";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type Props = {
   closePopup: () => void;
@@ -10,8 +10,19 @@ type Props = {
 };
 
 export default function CreateReport({ content, closePopup }: Props) {
-  const [title, setTitle] = useState("");
-  const [standOrt, setStandOrt] = useState("");
+
+  const spokenLanguage = "de";
+  const translateInLanguage = "de";
+
+  const [title, setTitle] = useState<string>("");
+  const [standOrt, setStandOrt] = useState<string>("");
+  const [speechContent, setSpeechContent] = useState<string>("");
+
+  const [translatedText, setTranslatedText] = useState<string>('');
+
+  useEffect(() => {
+    setSpeechContent(translatedText);
+  }, [translatedText]);
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value);
@@ -24,8 +35,27 @@ export default function CreateReport({ content, closePopup }: Props) {
   const saveReport = () => {
     console.log("Berichtstitel:", title);
     console.log("Standort:", location);
+
+    sendToReport();
+
     alert("Bericht gespeichert!");
   };
+
+  async function sendToReport() {
+    const text = translatedText;
+    const constructionSite = standOrt;
+    const reportTitle = title;
+
+    /*const result = await fetch(`http://localhost:3000/Ronny's-Url/`, {
+        method: 'POST',
+      headers: {'Content-Type': 'application/json' },
+      body: {
+        text: text,
+      constructionSite: constructionSite,
+      title: title
+      }
+    });*/
+  }
 
   return (
     <div className="w-8/12 py-12 px-12 bg-white mx-auto rounded-xl absolute top-[50%] left-[50%] transform translate-x-[-50%] translate-y-[-50%] z-20">
@@ -57,14 +87,16 @@ export default function CreateReport({ content, closePopup }: Props) {
       </div>
 
       <div className="bg-white flex justify-between items-center">
-        <AudioWaveRecorder />
+
+        <AudioWaveRecorder spokenLanguage={spokenLanguage} translateInLanguage={translateInLanguage} translatedText={translatedText} setTranslatedText={setTranslatedText} />
+
         <button className="hover:bg-[#265f7d] bg-[#3777AD] w-[70px] h-[35px] rounded-[10px] flex justify-center items-center text-white font-bold text-sm">
           DE
         </button>
       </div>
 
       <div className="w-full my-10 h-auto min-h-[100px] max-h-[250px] p-5 border-[2px] border-gray-200 bg-white rounded-md overflow-y-auto scroll-to-bottom">
-        {content || "Waiting..."}
+        {translatedText || "Waiting..."}
       </div>
 
       <div className="flex justify-end">

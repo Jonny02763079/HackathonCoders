@@ -7,12 +7,14 @@ type Props = {
     title: string,
 }
 
-export default function SpeechService({ spokenLanguage, translateInLanguage, constructionSite, title }: Props) {
+export default function SpeechService({ spokenLanguage, translateInLanguage }: Props) {
 
     const [transcript, setTranscript] = useState<string>('');
+    const [translatedText, setTranslatedText] = useState<string>('');
+
     const [isRecording, setIsRecording] = useState<boolean>(false);
 
-    const [translatedText, setTranslatedText] = useState<string>('');
+
 
     const mediaRecorderRef = useRef<MediaRecorder | null>(null);
 
@@ -41,11 +43,11 @@ export default function SpeechService({ spokenLanguage, translateInLanguage, con
                 const data = await response.json();
                 console.log('Transcription:', data);
 
-                setTranscript(data.text);
+                //setTranscript(data.text);
 
                 if (spokenLanguage === translateInLanguage) {
                     console.log("no translation - same languages");
-                    //await sendToReport(data.text, constructionSite, title);
+                    setTranslatedText(data.text);
                 } else {
                     await translate(data);
                 }
@@ -103,7 +105,7 @@ export default function SpeechService({ spokenLanguage, translateInLanguage, con
                 <button onClick={isRecording ? stopRecording : startRecording}>{isRecording ? "stop Recording" : "start Recording"}</button>
             </div>
             <div>
-                {transcript}
+                {translatedText}
             </div>
         </div>
     )
