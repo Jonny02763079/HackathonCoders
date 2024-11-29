@@ -9,6 +9,7 @@ export default function App() {
     <div className="bg-[#F4F8FB] h-[100vh]">
       <BrowserRouter>
         <Header />
+
         <Routes>
           <Route path="/" element={<Report reportNumber={1} />} />
           <Route path="report" element={<Report reportNumber={1} />} />
