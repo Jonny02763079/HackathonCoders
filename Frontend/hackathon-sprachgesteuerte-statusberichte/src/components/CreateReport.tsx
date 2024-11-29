@@ -9,7 +9,6 @@ type Props = {
 };
 
 export default function CreateReport({ closePopup }: Props) {
-
   const spokenLanguage = "de";
   const translateInLanguage = "de";
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -56,14 +55,14 @@ export default function CreateReport({ closePopup }: Props) {
 
     try {
       const response = await fetch(`http://localhost:3000/generate-report`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           constructionSite: standOrt,
           inputText: speechContent,
-          title: title
+          title: title,
         }),
       });
 
@@ -77,8 +76,6 @@ export default function CreateReport({ closePopup }: Props) {
       console.error("Error during fetch request:", error);
     }
   }
-
-
 
   return (
     <div className="w-8/12 py-12 px-12 bg-white mx-auto rounded-xl absolute top-[50%] left-[50%] transform translate-x-[-50%] translate-y-[-50%] z-20">
@@ -136,8 +133,9 @@ export default function CreateReport({ closePopup }: Props) {
                   EN
                 </li>
                 <li
-                  className={`p-2 hover:bg-[#CDE7F8] flex justify-center ${"DE" === selectedLanguage ? "font-bold bg-[#CDE7F8]" : ""
-                    }`}
+                  className={`p-2 hover:bg-[#CDE7F8] flex justify-center ${
+                    "DE" === selectedLanguage ? "font-bold bg-[#CDE7F8]" : ""
+                  }`}
                   onClick={() => selectLanguage("DE")}
                 >
                   DE
@@ -157,4 +155,4 @@ export default function CreateReport({ closePopup }: Props) {
       </div>
     </div>
   );
-};
+}
