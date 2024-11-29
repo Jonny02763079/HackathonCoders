@@ -49,7 +49,7 @@ export default function Report({ reportNumber }: Props) {
     <div className="pt-[80px] w-[100vw] px-[5em]">
       <div className="flex justify-between items-center">
         <div className="text-3xl font-semibold">
-          Berichte ( {reportNumber} )
+          Berichte ( {data?.length} )
         </div>
         {/* Übergebe togglePopup als onClick */}
         <Button content="Bericht erstellen" onClick={togglePopup} />
