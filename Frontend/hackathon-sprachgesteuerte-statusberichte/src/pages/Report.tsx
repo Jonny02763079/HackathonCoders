@@ -1,10 +1,19 @@
 import { useState } from "react";
 import Button from "../components/Button";
+import CreateReport from "../components/CreateReport";
+
 type Props = {
   reportNumber: number;
 };
 
 export default function Report({ reportNumber }: Props) {
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+
+  // Funktion zum Öffnen und Schließen des Popups
+  const togglePopup = () => {
+    setIsPopupOpen(!isPopupOpen);
+  };
+
   return (
     <div className="pt-[80px] w-[100vw] px-[5em]">
       <div className="flex justify-between items-center">
@@ -47,6 +56,14 @@ export default function Report({ reportNumber }: Props) {
           <div className="h-[1px] bg-[#F4F4F4] mt-5"></div>
         </div>
       </div>
+
+      {/* Wenn das Popup geöffnet ist, wird es angezeigt */}
+      {isPopupOpen && <CreateReport closePopup={togglePopup} />}
+
+      {/* Hintergrund wird abgedunkelt, wenn das Popup angezeigt wird */}
+      {isPopupOpen && (
+        <div className="fixed inset-0 bg-black opacity-80 z-10"></div>
+      )}
     </div>
   );
 }
