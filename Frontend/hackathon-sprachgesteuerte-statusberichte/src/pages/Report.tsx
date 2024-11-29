@@ -1,18 +1,49 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Button from "../components/Button";
 import CreateReport from "../components/CreateReport";
+import ReportRow from "./ReportRow";
 
 type Props = {
   reportNumber: number;
 };
 
+const getAllReports = async () => {
+  try {
+    const res = await fetch(`http://64.226.84.217:8055/items/reports`);
+    if (!res.ok) {
+      console.error(`Error: ${res.status} ${res.statusText}`);
+      return null;
+    }
+    return await res.json();
+  } catch (error) {
+    console.error("Could not load data", error);
+    return null;
+  }
+};
+
 export default function Report({ reportNumber }: Props) {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [data, setData] = useState<any[] | null>(null);
 
   // Funktion zum Öffnen und Schließen des Popups
   const togglePopup = () => {
     setIsPopupOpen(!isPopupOpen);
   };
+
+  useEffect(() => {
+    const fetchReports = async () => {
+      const reports = await getAllReports();
+      if (reports && reports.data) {
+        setData(reports.data);
+      } else {
+        setData([]);
+      }
+    };
+
+    fetchReports();
+  }, []);
+
+  console.log(data);
 
   return (
     <div className="pt-[80px] w-[100vw] px-[5em]">
@@ -30,30 +61,23 @@ export default function Report({ reportNumber }: Props) {
             <div>Ort</div>
           </div>
           <div className="h-[1px] bg-[#F4F4F4] my-5"></div>
-          <div className="grid grid-cols-3 font-regular text-md">
-            <div>Mock-Report-1</div>
-            <div>Dornbirn</div>
-            <div className="flex justify-end items-center ">
-              <button
-                onClick={togglePopup} // Öffnet das Popup
-                className="flex justify-between font-semibold text-sm gap-2 items-center hover:bg-[#F4F8FB] rounded-md py-1 px-3"
-              >
-                <div>Details anzeigen</div>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="12"
-                  height="12"
-                  fill="#121212"
-                  viewBox="0 0 256 256"
-                  aria-hidden="true"
-                  focusable="false"
-                >
-                  <path d="M184.49,136.49l-80,80a12,12,0,0,1-17-17L159,128,87.51,56.49a12,12,0,1,1,17-17l80,80A12,12,0,0,1,184.49,136.49Z"></path>
-                </svg>
-              </button>
-            </div>
+          <div>
+            {data ? (
+              data.map((report) => (
+                <div>
+                  <ReportRow
+                    key={report.id}
+                    id={report.id}
+                    title={report.title}
+                    construction_site={report.construction_site}
+                  />
+                  <div className="h-[1px] bg-[#F4F4F4] mb-5 my-5"></div>
+                </div>
+              ))
+            ) : (
+              <div>Loading...</div>
+            )}
           </div>
-          <div className="h-[1px] bg-[#F4F4F4] mt-5"></div>
         </div>
       </div>
 
