@@ -16,7 +16,7 @@ const getAllReports = async () => {
     }
     return await res.json();
   } catch (error) {
-    console.error('Could not load data', error);
+    console.error("Could not load data", error);
     return null;
   }
 };
@@ -44,7 +44,6 @@ export default function Report({ reportNumber }: Props) {
   }, []);
 
   console.log(data);
-
 
   return (
     <div className="pt-[80px] w-[100vw] px-[5em]">

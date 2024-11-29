@@ -10,6 +10,7 @@ export default function App() {
       <BrowserRouter>
         <Header />
         <Routes>
+          <Route path="/" element={<Report reportNumber={1} />} />
           <Route path="report" element={<Report reportNumber={1} />} />
           <Route path="report/:id" element={<ReportSingleView />} />
           <Route path="construction" element={<Construction />} />
