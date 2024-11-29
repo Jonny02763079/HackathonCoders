@@ -275,7 +275,7 @@ app.post('/translate/:translateInLanguage', async (req: any, res: any) => {
         const translatedText = completion.data.choices[0]?.message?.content || 'No translation available';
         console.log("Translated Text:", translatedText);
 
-        res.json({ text: translatedText });
+        res.json({ translatedText });
 
     } catch (error) {
         console.error("Error in translation:", error);

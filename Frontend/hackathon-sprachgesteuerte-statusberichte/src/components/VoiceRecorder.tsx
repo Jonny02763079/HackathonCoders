@@ -3,12 +3,16 @@ import { useRef, useState } from "react";
 type Props = {
     spokenLanguage: string,
     translateInLanguage: string
+    constructionSite: string,
+    title: string,
 }
 
-export default function SpeechService({ spokenLanguage, translateInLanguage }: Props) {
+export default function SpeechService({ spokenLanguage, translateInLanguage, constructionSite, title }: Props) {
 
     const [transcript, setTranscript] = useState<string>('');
     const [isRecording, setIsRecording] = useState<boolean>(false);
+
+    const [translatedText, setTranslatedText] = useState<string>('');
 
     const mediaRecorderRef = useRef<MediaRecorder | null>(null);
 
@@ -40,7 +44,8 @@ export default function SpeechService({ spokenLanguage, translateInLanguage }: P
                 setTranscript(data.text);
 
                 if (spokenLanguage === translateInLanguage) {
-                    console.log("no translation");
+                    console.log("no translation - same languages");
+                    //await sendToReport(data.text, constructionSite, title);
                 } else {
                     await translate(data);
                 }
@@ -61,8 +66,24 @@ export default function SpeechService({ spokenLanguage, translateInLanguage }: P
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
         });
-        console.log(result);
+        //console.log(result);
+        const translatedData = result.json();
+        //console.log(translatedData);
+        setTranslatedText(await translatedData);
     }
+
+
+    // async function sendToReport(text: string, constructionSite: string, title: string) {
+    //     const result = await fetch(`http://localhost:3000//`, {
+    //         method: 'POST',
+    //         headers: { 'Content-Type': 'application/json' },
+    //         body: {
+    //             text: text,
+    //             constructionSite: constructionSite,
+    //             title: title
+    //         }
+    //     });
+    // }
 
 
     function stopRecording() {
