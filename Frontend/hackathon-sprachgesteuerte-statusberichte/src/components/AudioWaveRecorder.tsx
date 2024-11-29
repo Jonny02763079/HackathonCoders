@@ -9,21 +9,12 @@ type Props = {
   setTranslatedText: React.Dispatch<React.SetStateAction<string>>;
 }
 
-
 export default function AudioWaveRecorder({ spokenLanguage, translateInLanguage, translatedText, setTranslatedText, }: Props) {
   const [isRecording, setIsRecording] = useState(false);
 
-  const toggleRecording = () => {
-    setIsRecording((prev) => !prev);
-  };
-
-
   //------------------------
 
-
   const [transcript, setTranscript] = useState<string>('');
-
-
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
 
@@ -31,15 +22,14 @@ export default function AudioWaveRecorder({ spokenLanguage, translateInLanguage,
     try {
       setIsRecording(true);
       setTranscript('');
+      setTranslatedText('');
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       const mediaRecorder = new MediaRecorder(stream);
       mediaRecorderRef.current = mediaRecorder;
 
       mediaRecorder.ondataavailable = async (event) => {
+
         const audioBlob = event.data;
-
-        //console.log(audioBlob);
-
         const audioFile = new Blob([audioBlob], { type: 'audio/mp3' });
 
         const formData = new FormData();
@@ -49,7 +39,6 @@ export default function AudioWaveRecorder({ spokenLanguage, translateInLanguage,
           method: 'POST',
           body: formData
         });
-
 
         const data = await response.json();
         console.log('Transcription:', data);
@@ -62,7 +51,6 @@ export default function AudioWaveRecorder({ spokenLanguage, translateInLanguage,
         } else {
           await translate(data);
         }
-
       };
 
       mediaRecorder.start();
@@ -79,30 +67,14 @@ export default function AudioWaveRecorder({ spokenLanguage, translateInLanguage,
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)
     });
-    //console.log(result);
+
     const translatedData = result.json();
-    //console.log(translatedData);
     setTranslatedText(await translatedData);
   }
 
-  // Ronny
-  // async function sendToReport(text: string, constructionSite: string, title: string) {
-  //     const result = await fetch(`http://localhost:3000//`, {
-  //         method: 'POST',
-  //         headers: { 'Content-Type': 'application/json' },
-  //         body: {
-  //             text: text,
-  //             constructionSite: constructionSite,
-  //             title: title
-  //         }
-  //     });
-  // }
-
-
   function stopRecording() {
-
     if (mediaRecorderRef.current) {
-      mediaRecorderRef.current.stop(); // Stoppe die Aufnahme
+      mediaRecorderRef.current.stop();
       setIsRecording(false);
       console.log('Aufnahme gestoppt');
     } else {
@@ -111,7 +83,6 @@ export default function AudioWaveRecorder({ spokenLanguage, translateInLanguage,
   }
 
   //----------------------
-
 
   return (
     <div className="flex justify-between items-center gap-x-5">

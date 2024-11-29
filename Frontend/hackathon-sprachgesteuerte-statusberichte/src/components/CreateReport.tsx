@@ -9,7 +9,7 @@ type Props = {
   content?: string;
 };
 
-export default function CreateReport({ content, closePopup }: Props) {
+export default function CreateReport({ closePopup }: Props) {
 
   const spokenLanguage = "de";
   const translateInLanguage = "de";
@@ -35,29 +35,29 @@ export default function CreateReport({ content, closePopup }: Props) {
   const saveReport = () => {
     console.log("Berichtstitel:", title);
     console.log("Standort:", location);
-
     sendToReport();
-
     alert("Bericht gespeichert!");
   };
 
+
+  //Beispiel für eine Implementierung - es fehlen noch 2 weitere
   async function sendToReport() {
     const text = translatedText;
     const constructionSite = standOrt;
     const reportTitle = title;
 
-    //Ronny
-
-    /*const result = await fetch(`http://localhost:3000/Ronny's-Url/`, {
-        method: 'POST',
-      headers: {'Content-Type': 'application/json' },
-      body: {
+    const result = await fetch(`http://localhost:3000/api/report/openAi/extractMaterials`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
         text: text,
-      constructionSite: constructionSite,
-      title: title
-      }
-    });*/
+        constructionSite: constructionSite,
+        title: reportTitle
+      })
+    });
+    console.log(result);
   }
+
 
   return (
     <div className="w-8/12 py-12 px-12 bg-white mx-auto rounded-xl absolute top-[50%] left-[50%] transform translate-x-[-50%] translate-y-[-50%] z-20">
@@ -106,4 +106,4 @@ export default function CreateReport({ content, closePopup }: Props) {
       </div>
     </div>
   );
-}
+};
