@@ -57,30 +57,30 @@ async function getOpenAiResponse(prompt: string): Promise<string> {
 
 async function extractMaterial(report: string): Promise<string> {
     const prompt = `
-        Extract the "Materials Used" from the following text:
+        Extrahiere die "Verwendeten Materialien" aus folgendem Text:
         ${report}
         
-        Only return the materials mentioned, nothing else. If no materials are mentioned, return an empty result (no spaces, no zeros, nothing).
+        Gib nur die Materialien zurück, die erwähnt werden, nichts anderes. Wenn keine Materialien erwähnt werden, gib ein leeres Ergebnis zurück (keine Leerzeichen, keine Nullen, gar nichts).
     `;
     return await getOpenAiResponse(prompt);
 }
 
 async function extractProblems(report: string): Promise<string> {
     const prompt = `
-        Extract the "Problems/Comments" from the following text:
+        Extrahiere die "Probleme/Kommentare" aus folgendem Text:
         ${report}
         
-        Only return the problems or comments. If no problems or comments are mentioned, return an empty result (no spaces, no zeros, nothing).
+        Gib nur die Probleme oder Kommentare zurück. Wenn keine Probleme oder Kommentare erwähnt werden, gib ein leeres Ergebnis zurück (keine Leerzeichen, keine Nullen, gar nichts).
     `;
     return await getOpenAiResponse(prompt);
 }
 
 async function extractFurtherNotes(report: string): Promise<string> {
     const prompt = `
-        Extract the "Further Notes" from the following text:
+        Extrahiere die "Weitere Notizen" aus folgendem Text:
         ${report}
         
-        Only return the further notes. If no further notes are mentioned, return an empty result (no spaces, no zeros, nothing).
+        Gib nur die weiteren Notizen zurück. Wenn keine weiteren Notizen erwähnt werden, gib ein leeres Ergebnis zurück (keine Leerzeichen, keine Nullen, gar nichts).
     `;
     return await getOpenAiResponse(prompt);
 }
@@ -94,16 +94,16 @@ app.post('/generate-report', async (req: any, res: any) => {
     }
 
     try {
-        // Constructing the prompt for the OpenAI API call
-        const prompt = `Create a report based on the following data:
-            Report Title: ${title}
-            Date of Creation: [Current Date]
-            Construction Site: ${constructionSite}
-            Work Description: ${inputText}
+        const prompt = `Erstelle einen Bericht basierend auf den folgenden Daten:
+            Berichtstitel: ${title}
+            Erstellungsdatum: [füge hier das aktuelle Datum in JJJJ-MM-TT ein (ohne die Uhrzeit!!!!)]
+            Baustelle: ${constructionSite}
+            Arbeitsbeschreibung: ${inputText}
 
-            Ensure that the required fields are filled. If materials, problems, or notes are mentioned, populate those fields. Otherwise, leave them blank—completely empty, no filler text.
-            The report should be written in fluent text, not in a strict structure. Leave spaces and line breaks marked as '\\n' to preserve readability.
+            Stelle sicher, dass die erforderlichen Felder ausgefüllt sind. Wenn Materialien, Probleme oder Anmerkungen erwähnt werden, fülle diese Felder aus. Andernfalls lasse sie leer—komplett leer, ohne Platzhaltertext.
+            Der Bericht sollte in fließendem Text verfasst werden, nicht in einer strikten Struktur. Lasse Leerzeichen und Zeilenumbrüche als '\\n' markiert, um die Lesbarkeit zu erhalten.
         `;
+
 
         const generatedReport: string = await getOpenAiResponse(prompt);
 
@@ -148,7 +148,6 @@ app.post('/generate-report', async (req: any, res: any) => {
     }
 });
 
-// Endpoint to transcribe audio files using OpenAI Whisper
 const openai = new OpenAI({
     apiKey: process.env.OPEN_AI_KEY,
 });
@@ -186,7 +185,6 @@ app.post('/transcribe/:spokenLanguage', upload.single('file'), async (req: any, 
     }
 });
 
-// Endpoint for text translation
 app.post('/translate/:translateInLanguage', async (req: any, res: any) => {
     let language = req.params.translateInLanguage || "de";
     language = language === "de" ? "german" : language === "en" ? "english" : "german";

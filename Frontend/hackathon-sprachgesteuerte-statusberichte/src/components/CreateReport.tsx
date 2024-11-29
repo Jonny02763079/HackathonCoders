@@ -4,11 +4,7 @@ import Button from "./Button";
 import Select from "./Select";
 import { useEffect, useState } from "react";
 
-type Props = {
-  closePopup: () => void;
-};
-
-export default function CreateReport({ closePopup }: Props) {
+export default function CreateReport({ closePopup }: any) {
   const spokenLanguage = "de";
   const translateInLanguage = "de";
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -20,16 +16,22 @@ export default function CreateReport({ closePopup }: Props) {
 
   const [translatedText, setTranslatedText] = useState<string>("");
 
+  // Fehlerzustände für die Validierung
+  const [titleError, setTitleError] = useState<string>("");
+  const [standOrtError, setStandOrtError] = useState<string>("");
+
   useEffect(() => {
     setSpeechContent(translatedText);
   }, [translatedText]);
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value);
+    setTitleError(""); // Fehler zurücksetzen
   };
 
   const handleLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setStandOrt(e.target.value);
+    setStandOrtError(""); // Fehler zurücksetzen
   };
 
   const toggleDropdown = () => {
@@ -41,9 +43,30 @@ export default function CreateReport({ closePopup }: Props) {
     setIsDropdownOpen(false);
   };
 
+  const validateInputs = (): boolean => {
+    let isValid = true;
+
+    if (!title.trim()) {
+      setTitleError("Berichtstitel darf nicht leer sein.");
+      isValid = false;
+    }
+
+    if (!standOrt.trim()) {
+      setStandOrtError("Standort darf nicht leer sein.");
+      isValid = false;
+    }
+
+    return isValid;
+  };
+
   const saveReport = () => {
+    // Validierung durchführen
+    if (!validateInputs()) {
+      return;
+    }
+
     console.log("Berichtstitel:", title);
-    console.log("Standort:", location);
+    console.log("Standort:", standOrt);
 
     sendToReport();
     closePopup();
@@ -89,9 +112,13 @@ export default function CreateReport({ closePopup }: Props) {
           <input
             value={title}
             onChange={handleTitleChange}
-            className="w-[230px] flex justify-between gap-10 items-center border-[1px] border-[#A6A6A6] rounded-md px-4 py-[8px] focus:outline-none"
+            className={`w-[230px] flex justify-between gap-10 items-center border-[1px] ${titleError ? "border-red-500" : "border-[#A6A6A6]"
+              } rounded-md px-4 py-[8px] focus:outline-none`}
             required
-          ></input>
+          />
+          {titleError && (
+            <div className="text-red-500 text-sm mt-1">{titleError}</div>
+          )}
         </div>
 
         <div>
@@ -99,9 +126,13 @@ export default function CreateReport({ closePopup }: Props) {
           <input
             value={standOrt}
             onChange={handleLocationChange}
-            className="w-[230px] flex justify-between gap-10 items-center border-[1px] border-[#A6A6A6] rounded-md px-4 py-[8px] focus:outline-none"
+            className={`w-[230px] flex justify-between gap-10 items-center border-[1px] ${standOrtError ? "border-red-500" : "border-[#A6A6A6]"
+              } rounded-md px-4 py-[8px] focus:outline-none`}
             required
-          ></input>
+          />
+          {standOrtError && (
+            <div className="text-red-500 text-sm mt-1">{standOrtError}</div>
+          )}
         </div>
 
         <Select content="Projekt" title="Projekt" />
@@ -132,9 +163,8 @@ export default function CreateReport({ closePopup }: Props) {
                   EN
                 </li>
                 <li
-                  className={`p-2 hover:bg-[#CDE7F8] flex justify-center ${
-                    "DE" === selectedLanguage ? "font-bold bg-[#CDE7F8]" : ""
-                  }`}
+                  className={`p-2 hover:bg-[#CDE7F8] flex justify-center ${"DE" === selectedLanguage ? "font-bold bg-[#CDE7F8]" : ""
+                    }`}
                   onClick={() => selectLanguage("DE")}
                 >
                   DE
