@@ -66,7 +66,7 @@ const formatDate = (isoString: string) => {
     const hh = String(date.getHours()).padStart(2, '0');
     const min = String(date.getMinutes()).padStart(2, '0');
     const ss = String(date.getSeconds()).padStart(2, '0');
-    return `${yyyy}-${mm}-${dd}-${hh}-${min}-${ss}`;
+    return `${yyyy}-${mm} ${dd}:${hh}`;
 };
 
 const ReportSingleView = () => {
@@ -130,11 +130,36 @@ const ReportSingleView = () => {
     if (!data) return <div>No data available</div>;
 
     return (
-        <div className='flex items-center flex-col h-36'>
-            <div style={{ height: 700, marginBottom: 30 }}>
-                <PDFViewer >
-                    <MyDocument data={data}></MyDocument>
-                </PDFViewer>
+        <div className='flex items-center flex-col bg-[#F4F8FB] px-[25%] py-[3%]'>
+            <div>
+                <div style={{ marginBottom: 10 }}>
+                    <div style={styles.title}>Titel: {data.data.title}</div>
+                </div>
+                <div style={{ marginBottom: 5 }}>
+                    <div style={styles.subTitle}>Erstellt am: {formatDate(data.data.date_created)}</div>
+                </div>
+                <div style={{ marginBottom: 5 }}>
+                    <div style={styles.subTitle}>Bericht Id: {data.data.id}</div>
+                </div>
+                <div style={{ marginBottom: 5 }}>
+                    <div style={styles.subTitle}>Baustelle: {data.data.construction_site}</div>
+                </div>
+                <div style={{ marginBottom: 5 }}>
+                    <div style={styles.subTitle}>Erledigte Arbeit:</div>
+                    <div style={styles.longDescriptions}>{data.data.work_done_description || "keine Angabe"}</div>
+                </div>
+                <div style={{ marginBottom: 5 }}>
+                    <div style={styles.subTitle}>Materialien verwendet:</div>
+                    <div style={styles.longDescriptions}>{data.data.material_used_description || "keine Angabe"}</div>
+                </div>
+                <div style={{ marginBottom: 5 }}>
+                    <div style={styles.subTitle}>Aufgetauchte Probleme:</div>
+                    <div style={styles.longDescriptions}>{data.data.problems_emerged_description || "keine Angabe"}</div>
+                </div>
+                <div style={{ marginBottom: 5 }}>
+                    <div style={styles.subTitle}>Sonstige Anmerkungen:</div>
+                    <div style={styles.longDescriptions}>{data.data.further_notes_description || "keine Angabe"}</div>
+                </div>
             </div>
             <div style={{ backgroundColor: "#3777AD", padding: 20, color: "white", width: "fit-content", borderRadius: 15, cursor: "pointer" }}>
                 <PDFDownloadLink document={<MyDocument data={data} />} fileName={`report_${data.data.id}.pdf`}>
