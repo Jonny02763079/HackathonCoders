@@ -1,5 +1,8 @@
 import NavBarItem from "./NavBarItem";
 import { useState } from "react";
+import German from '../assets/pictures/GermanFlagg.jpeg';
+import England from '../assets/pictures/EnglandFlagge.jpeg';
+import LogoRhomberg from '../assets/pictures/Logo_Rhomberg_SERSA-removebg-preview.png';
 
 export default function Header() {
   const [activeLink, setActiveLink] = useState<"bericht" | "baustelle" | null>(
@@ -17,10 +20,28 @@ export default function Header() {
     setIsDropdownOpen(false);
   };
 
+  // Überprüft, welche Sprache aktuell ausgewählt ist und gibt eine Nachricht zurück
+  const getSelectedLanguageMessage = () => {
+    switch (selectedLanguage) {
+      case "DE":
+        return "Deutsch (DE)";
+      case "EN":
+        return "English (EN)";
+      default:
+        return "Keine Sprache ausgewählt";
+    }
+  };
+
   return (
     <div className="grid grid-cols-3 h-[80px] items-center px-12 shadow-custom">
       <div className="flex items-center gap-x-8">
-        <div className="w-[45px] h-[45px] bg-[#3777AD] rounded-full"></div>
+        <div >
+          {selectedLanguage === "DE" ? (
+            <img className="w-[45px] h-[45px] rounded-full" src={German} alt="" />
+          ) : (
+            <img className="w-[45px] h-[45px] rounded-full" src={England} alt="" />
+          )}
+        </div>
 
         <div>
           <button onClick={toggleDropdown}>
@@ -45,18 +66,16 @@ export default function Header() {
             <div className="absolute mt-2 w-[230px] border-[1px] border-[#BDBDBD] rounded-md bg-white shadow-lg">
               <ul className="items-center justify-center rounded-md my-2">
                 <li
-                  className={`mx-2 rounded-md p-2 cursor-pointer px-4 py-[8px] ${
-                    "DE" === selectedLanguage ? "font-bold bg-[#CDE7F8]" : ""
-                  }`}
-                  onClick={() => selectLanguage("DE")} // Auswählen eines Projekts
+                  className={`mx-2 rounded-md p-2 cursor-pointer px-4 py-[8px] ${"DE" === selectedLanguage ? "font-bold bg-[#CDE7F8]" : ""
+                    }`}
+                  onClick={() => selectLanguage("DE")}
                 >
                   DE
                 </li>
                 <li
-                  className={`mx-2 rounded-md p-2 cursor-pointer px-4 py-[8px] ${
-                    "EN" === selectedLanguage ? "font-bold bg-[#CDE7F8]" : ""
-                  }`}
-                  onClick={() => selectLanguage("EN")} // Auswählen eines Projekts
+                  className={`mx-2 rounded-md p-2 cursor-pointer px-4 py-[8px] ${"EN" === selectedLanguage ? "font-bold bg-[#CDE7F8]" : ""
+                    }`}
+                  onClick={() => selectLanguage("EN")}
                 >
                   EN
                 </li>
@@ -80,7 +99,13 @@ export default function Header() {
           onClick={() => setActiveLink("baustelle")}
         />
       </div>
-      <div></div>
+      <div className="flex justify-end">
+        <button className="cursor-pointer">
+          <a href="https://www.rhomberg-sersa.com/de">
+            <img className="w-[150px]" src={LogoRhomberg} alt="" />
+          </a>
+        </button>
+      </div>
     </div>
   );
 }
